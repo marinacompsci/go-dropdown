@@ -1,8 +1,10 @@
 # TODOs
 
 ## v0.1
-[ ] Highlight each occurence of searched word in result list  
+[X] Highlight each occurence of searched word in result list  
 [ ] Paginate through result list with TAB
+[ ] Go up and down in result list 
+[ ] See last results at program start
 [X] Don't delete if input list is empty (only char in prompt is '>')
 [ ] Disable special keys like CTRL + something, except CTRL-C and CTRL-Z
 [ ] Allow putting program in background through CTRL-Z
