@@ -51,7 +51,9 @@ func main() {
 		if b == 3 { // CTRL-C
 			return
 		} else if b == 127 { // DELETE KEY
-			input = input[:len(input)-1]
+			if len(input) > 0 {
+				input = input[:len(input)-1]
+			}
 		} else {
 			input = append(input, string(b))
 		}
