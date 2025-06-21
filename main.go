@@ -2,19 +2,18 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
-	"slices"
 	"strings"
 
+	"github.com/marinacompsci/go-dropdown/internal/helper"
 	"golang.org/x/term"
 )
 
 func main() {
 	const (
-		//TODO: Separate 'move' from '?' (UI stuff)
-		clearScreenEscSeq = "\033[2J\033[1;1H" // \033[1:1H is move
+		//TODO: Separate cursor moves from UI render stuff
+		clearScreenEscSeq = "\033[2J\033[1;1H" // \033[1:1H is a move, \033[2J clears the screen
 	)
 
 	var input []string
@@ -63,34 +62,12 @@ func main() {
 		fmt.Printf("\r>%s", strings.Join(input, ""))
 
 		var resultList []string
-		searchTokenInList(inputStr, searchList, &resultList)
+		helper.FindToken(inputStr, searchList, &resultList)
 		if len(input) > 0 {
 			//TODO: save "\n\r" in constant
-			fmt.Print("\n\r" + stringifyList(resultList, "\n\r"))
+			fmt.Print("\n\r" + helper.StringifyList(resultList, "\n\r"))
 		}
 
 		fmt.Printf("\033[1;%dH", len(input)+2) // Move cursor back to the end of the prompt
 	}
-}
-
-
-//TODO: put those functions in a separate package (helper?)
-func stringifyList(l []string, sep string) string {
-	if len(l) == 0 { return "" }
-
-	return strings.Join(l, sep)
-}
-
-func searchTokenInList(token string, list []string, resultList *[]string) error {
-	if len(list) == 0 {
-		return errors.New("List is empty")
-	}
-	for _, item := range list {
-		if strings.Contains(item, token) {
-			*resultList = append(*resultList, item)
-		}
-	}
-	slices.Sort(*resultList)
-
-	return nil
 }
