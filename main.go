@@ -14,6 +14,7 @@ func main() {
 	const (
 		//TODO: Separate cursor moves from UI render stuff
 		clearScreenEscSeq = "\033[2J\033[1;1H" // \033[1:1H is a move, \033[2J clears the screen
+		promptSymbol = ">"
 	)
 
 	var input []string
@@ -40,7 +41,7 @@ func main() {
 	defer term.Restore(fd, oldState)
 
 	fmt.Print(clearScreenEscSeq)
-	fmt.Print(">")
+	fmt.Print(promptSymbol)
 	for {
 		reader := bufio.NewReader(os.Stdin)
 		b, err := reader.ReadByte();
@@ -61,7 +62,7 @@ func main() {
 		inputStr := strings.Join(input, "")
 
 		fmt.Print(clearScreenEscSeq)
-		fmt.Printf("\r>%s", strings.Join(input, ""))
+		fmt.Printf("\r%s%s", promptSymbol, strings.Join(input, ""))
 
 		var resultList []string
 		helper.FindToken(inputStr, searchList, &resultList)
