@@ -48,9 +48,9 @@ func main() {
 			fmt.Printf("ERROR: %v", err)
 		}
 
-		if b == 3 { // CTRL-C
+		if b == KeyCtrlC {
 			return
-		} else if b == 127 { // DELETE KEY
+		} else if b == KeyDelete {
 			if len(input) > 0 {
 				input = input[:len(input)-1]
 			}
