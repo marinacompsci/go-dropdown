@@ -7,7 +7,7 @@
 [ ] See last results at program start
 [X] Don't delete if input list is empty (only char in prompt is '>')
 [ ] Disable special keys like CTRL + something, except CTRL-C and CTRL-Z
-[ ] Allow putting program in background through CTRL-Z
+    [ ] Allow putting program in background through CTRL-Z
 [ ] Add multiline string by jumping to next line with SHIFT+ENTER
 [ ] Add bi-modal system like vim(INSERTION and NORMAL mode), 
 enter NORMAL mode with ESC which shifts focus to the result 
