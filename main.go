@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/marinacompsci/go-dropdown/internal/database"
+	"github.com/marinacompsci/go-dropdown/internal/repository"
 	"golang.org/x/term"
 )
 
@@ -18,20 +20,11 @@ var (
 
 
 func main() {
-	Data := []string{"maçã", "banana", "cereja", "laranja", "uva", "limão", "manga", "abacaxi", "pêra", "pêssego",
-	"morango", "framboesa", "mirtilo", "amora", "melancia", "melão", "kiwi", "papaia", "coco", "figo",
-	"tâmara", "romã", "caqui", "goiaba", "maracujá", "acerola", "cajá", "pitanga", "jabuticaba", "caju",
-	"cupuaçu", "açaí", "bacuri", "buriti", "cagaita", "cambucá", "cambuci", "camu-camu", "cajuí", "carambola",
-	"ciriguela", "fruta-pão", "graviola", "guaraná", "ingá", "jaca", "jambo", "jenipapo", "juá", "licuri",
-	"mangaba", "murici", "pequi", "pitomba", "seriguela", "umbu", "uvaia", "abacate", "ameixa", "damasco",
-	"nêspera", "tangerina", "toranja", "lima", "cidra", "bergamota", "mexerica", "ponkan", "kinkan", "yuzu",
-	"physalis", "cranberry", "goji", "amêndoa", "avelã", "castanha", "noz", "pistache", "macadâmia", "pecã",
-	"jujuba", "lichia", "longan", "rambutan", "durião", "mangostão", "fruta-dragão", "atemoia", "pinha", "fruta-conde",
-	"sapoti", "cajamanga", "abiu", "bacupari", "biribá", "araçá", "grumixama", "cambuí", "gabiroba", "marmelada"}
-
+	db := database.ConnectToDB()
 	prompt := NewPrompt()
 	menu := NewMenu()
-	screen := NewScreen(prompt, menu, Data)
+	repo := repository.NewExampleRepository(db)
+	screen := NewScreen(prompt, menu, repo)
 
 
 	fd := int(os.Stdin.Fd())

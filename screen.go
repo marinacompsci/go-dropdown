@@ -4,19 +4,21 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+
+	"github.com/marinacompsci/go-dropdown/internal/repository"
 )
 
 
 type Screen struct {
-	data []string
+	repo *repository.ExampleRepository
 	prompt *Prompt
 	menu *Menu
 }
 
 
-func NewScreen(p *Prompt, m *Menu, data []string) *Screen {
+func NewScreen(p *Prompt, m *Menu, r *repository.ExampleRepository) *Screen {
 	return &Screen{
-		data: data,
+		repo: r,
 		prompt: p,
 		menu: m,
 	}
@@ -47,14 +49,19 @@ func (s *Screen) ReadPrompt(b byte) error {
 }
 
 func (s *Screen) filterListByInput(input string) error {
+	data, err := s.repo.GetAll()
+	if err != nil {
+		return err
+	}
+
 	inputNotFound := true
 
-	if len(s.data) == 0 {
+	if len(data) == 0 {
 		return ErrEmptyListAsResult
 	}
 
 	var tmpList []string
-	for _, item := range s.data {
+	for _, item := range data {
 		if strings.Contains(item, input) {
 			inputNotFound = false
 			item = strings.Replace(item, input, fmt.Sprintf("%s%s%s%s", ColorForegroundBlack, ColorBackgroundYellow, input, ColorResetAll), -1)
