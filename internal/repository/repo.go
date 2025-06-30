@@ -30,6 +30,7 @@ func (r *ExampleRepository) GetAll() ([]string, error) {
 		}
 		names = append(names, name)
 	}
+	rows.Close()
 
 	return names, nil
 }
