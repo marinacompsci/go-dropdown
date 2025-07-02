@@ -49,7 +49,7 @@ func (s *Screen) ReadPrompt(b byte) error {
 				s.cursorY = 2
 			} else {
 				//TODO: put the promptSymbol inside the prompt so that
-				// adding 1 moves us to the right side of the prompt ">[]" when prompt is empty
+				// adding 1 moves us to the right side of the prompt ">[]" when the prompt is empty
 				moveCursorToPosition(1, s.prompt.length()+2)
 				s.cursorY = 1
 			}
@@ -57,7 +57,10 @@ func (s *Screen) ReadPrompt(b byte) error {
 		case ErrKeyUp:
 			if s.inSelectionMode {
 				newCursorY := s.cursorY - 1
-				if newCursorY < 2 { // Y = 1 is where the prompt is at, let's not go back there, this is what ESC is for
+				// Y = 1 is where the prompt line lives,
+				// let's not go back there, this is what ESC is for.
+				//TODO: change to < 1 when the prompt includes the promptSymbol
+				if newCursorY < 2 {
 					return nil
 				}
 				//TODO: update cursor inside moveCursor, make it a method
@@ -71,7 +74,8 @@ func (s *Screen) ReadPrompt(b byte) error {
 			if s.inSelectionMode {
 				paginationMax := 20
 				newCursorY := s.cursorY + 1
-				// The cursor's origin is 1 which is where the prompt is at, so in order to actually go down N from the origin
+				// The cursor's origin(furthest point north) is 1 which is where the prompt line lives,
+				// so in order to actually go down N points from the origin
 				// we have to stop at N+1 so we add 1 to paginationMax and to menu.length
 				if newCursorY > s.menu.length()+1 || newCursorY > paginationMax+1 { 
 					return nil
