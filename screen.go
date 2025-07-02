@@ -48,9 +48,7 @@ func (s *Screen) ReadPrompt(b byte) error {
 				moveCursorToPosition(2, 1)
 				s.cursorY = 2
 			} else {
-				//TODO: put the promptSymbol inside the prompt so that
-				// adding 1 moves us to the right side of the prompt ">[]" when the prompt is empty
-				moveCursorToPosition(1, s.prompt.length()+2)
+				moveCursorToPosition(1, s.prompt.length()+1)
 				s.cursorY = 1
 			}
 			return nil
@@ -59,8 +57,7 @@ func (s *Screen) ReadPrompt(b byte) error {
 				newCursorY := s.cursorY - 1
 				// Y = 1 is where the prompt line lives,
 				// let's not go back there, this is what ESC is for.
-				//TODO: change to < 1 when the prompt includes the promptSymbol
-				if newCursorY < 2 {
+				if newCursorY <= 1 {
 					return nil
 				}
 				//TODO: update cursor inside moveCursor, make it a method
@@ -137,7 +134,7 @@ func (s *Screen) filterListByInput(input string) error {
 		}
 		fmt.Print(l)
 
-		moveCursorToPosition(1, s.prompt.length()+2)
+		moveCursorToPosition(1, s.prompt.length()+1)
 	}
 
 	return nil
