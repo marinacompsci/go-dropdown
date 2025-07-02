@@ -21,11 +21,21 @@ func NewPrompt() *Prompt {
 const PromptSymbol = ">"
 
 func (p *Prompt) Read(b byte) error {
-	if b == KeyCtrlC {
+	key := Key(b)
+
+	switch(key) {
+	case KEY_CTRL_C:
 		return ErrUserInterrupted
-	} else if b == KeyDelete {
+	case KEY_DEL:
 		p.trimByte()
-	} else {
+	case KEY_DOWN:
+		return ErrKeyDown
+	case KEY_UP:
+		return ErrKeyUp
+	case KEY_ESC:
+		return ErrKeyEsc
+		//TOOD: toggle selection mode
+	default:
 		p.appendByte(b)
 	}
 	return nil
