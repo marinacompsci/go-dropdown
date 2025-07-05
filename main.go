@@ -11,7 +11,9 @@ import (
 	"golang.org/x/term"
 )
 
+//TODO: create tests
 
+//TODO: separate errors from events(ErrKeyEsc) and put them in a package
 var (
 	ErrUserInterrupted = errors.New("User pressed CTRL-C")
 	ErrEmptyListAsArg = errors.New("Empty list passed as argument")
