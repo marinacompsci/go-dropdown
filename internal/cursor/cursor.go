@@ -1,3 +1,6 @@
+/**
+Move cursor vertically and horizontally across the screen.
+**/
 package cursor
 
 import (
@@ -7,6 +10,14 @@ import (
 type Cursor struct {
 	Col int
 	Line int
+}
+
+
+func NewCursor() *Cursor {
+	return &Cursor{
+		Col: 1,
+		Line: 1,
+	}
 }
 
 

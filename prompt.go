@@ -1,3 +1,6 @@
+/**
+Write, update and keep user's input.
+**/
 package main
 
 import (
@@ -20,26 +23,6 @@ func NewPrompt() *Prompt {
 
 const PromptSymbol = ">"
 
-func (p *Prompt) Read(b byte) error {
-	key := Key(b)
-
-	switch(key) {
-	case KEY_CTRL_C:
-		return ErrUserInterrupted
-	case KEY_DEL:
-		p.trimByte()
-	case KEY_DOWN:
-		return ErrKeyDown
-	case KEY_UP:
-		return ErrKeyUp
-	case KEY_ESC:
-		return ErrKeyEsc
-	default:
-		p.appendByte(b)
-	}
-	return nil
-}
-
 func (p *Prompt) appendByte(newInput byte) {
 	p.input = append(p.input, string(newInput))
 }
@@ -56,7 +39,7 @@ not the PromptSymbol.
 (Do not use p.length as its intended for outside use
 and counts the PromptSymbol as one of the characters.)
 */
-func (p *Prompt) trimByte() {
+func (p *Prompt) trimInput() {
 	if l := len(p.input); l > 0 {
 		p.input = p.input[:l-1]
 	}

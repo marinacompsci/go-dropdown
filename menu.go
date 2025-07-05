@@ -1,7 +1,11 @@
+/**
+Write to, update and hold list of results.
+**/
 package main
 
 import (
 	"strings"
+	"github.com/marinacompsci/go-dropdown/internal/exception"
 
 )
 
@@ -37,7 +41,7 @@ func (m *Menu) length() int {
 
 func formatWithNewLines(l []string) (error, string) {
 	if len(l) == 0 { 
-		return ErrEmptyListAsArg, ""
+		return exception.ErrEmptyListAsArg, ""
 	}
 	return nil, strings.Join(l, "\n\r")
 }
