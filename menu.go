@@ -6,6 +6,7 @@ import (
 )
 
 type Menu struct {
+	//TODO: do not export list
 	list []string
 }
 
@@ -29,8 +30,11 @@ func (m *Menu) FormattedList() (error, string) {
 	return nil, s
 }
 
+func (m *Menu) length() int {
+	return len(m.list)
+}
 
-/*********************** HELPERS ***********************/
+
 func formatWithNewLines(l []string) (error, string) {
 	if len(l) == 0 { 
 		return ErrEmptyListAsArg, ""

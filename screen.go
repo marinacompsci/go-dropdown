@@ -13,6 +13,9 @@ type Screen struct {
 	repo *repository.ExampleRepository
 	prompt *Prompt
 	menu *Menu
+	inSelectionMode bool
+	cursorX int
+	cursorY int
 }
 
 
@@ -21,6 +24,11 @@ func NewScreen(p *Prompt, m *Menu, r *repository.ExampleRepository) *Screen {
 		repo: r,
 		prompt: p,
 		menu: m,
+		//TODO: Add keyboard struct to read byte
+		inSelectionMode: false,
+		//TODO: Add cursor struct with state and methods
+		cursorX: 1,
+		cursorY: 1,
 	}
 }
 
@@ -33,7 +41,49 @@ func (s *Screen) PreRender() {
 
 func (s *Screen) ReadPrompt(b byte) error {
 	if err := s.prompt.Read(b); err != nil {
-		return err
+		switch err {
+		case ErrKeyEsc:
+			s.inSelectionMode = !s.inSelectionMode
+			if s.inSelectionMode && s.menu.length() > 0 {
+				moveCursorToPosition(2, 1)
+				s.cursorY = 2
+			} else {
+				moveCursorToPosition(1, s.prompt.length()+1)
+				s.cursorY = 1
+			}
+			return nil
+		case ErrKeyUp:
+			if s.inSelectionMode {
+				newCursorY := s.cursorY - 1
+				// Y = 1 is where the prompt line lives,
+				// let's not go back there, this is what ESC is for.
+				if newCursorY <= 1 {
+					return nil
+				}
+				//TODO: update cursor inside moveCursor, make it a method
+				//TODO: change order of args to (column, line) to reflect X,Y
+				moveCursorToPosition(newCursorY, 1)
+				s.cursorY -= 1
+			}
+
+			return nil
+		case ErrKeyDown:
+			if s.inSelectionMode {
+				paginationMax := 20
+				newCursorY := s.cursorY + 1
+				// The cursor's origin(furthest point north) is 1 which is where the prompt line lives,
+				// so in order to actually go down N points from the origin
+				// we have to stop at N+1 so we add 1 to paginationMax and to menu.length
+				if newCursorY > s.menu.length()+1 || newCursorY > paginationMax+1 { 
+					return nil
+				}
+				moveCursorToPosition(newCursorY, 1)
+				s.cursorY += 1
+			}
+			return nil
+		default:
+			return err
+		}
 	}
 
 	reset()
@@ -84,13 +134,12 @@ func (s *Screen) filterListByInput(input string) error {
 		}
 		fmt.Print(l)
 
-		moveCursorToPosition(1, s.prompt.length()+2)
+		moveCursorToPosition(1, s.prompt.length()+1)
 	}
 
 	return nil
 }
 
-/*********************** HELPERS *******************/
 func moveCursorToPosition(line int, column int) {
 	fmt.Printf("\033[%d;%dH", line, column)
 }

@@ -21,11 +21,20 @@ func NewPrompt() *Prompt {
 const PromptSymbol = ">"
 
 func (p *Prompt) Read(b byte) error {
-	if b == KeyCtrlC {
+	key := Key(b)
+
+	switch(key) {
+	case KEY_CTRL_C:
 		return ErrUserInterrupted
-	} else if b == KeyDelete {
+	case KEY_DEL:
 		p.trimByte()
-	} else {
+	case KEY_DOWN:
+		return ErrKeyDown
+	case KEY_UP:
+		return ErrKeyUp
+	case KEY_ESC:
+		return ErrKeyEsc
+	default:
 		p.appendByte(b)
 	}
 	return nil
@@ -40,19 +49,38 @@ func (p *Prompt) WriteFormatted() {
 	fmt.Printf("\r%s%s", PromptSymbol, p.Stringified())
 }
 
-
+/*
+Triggered when the user presses the DELETE key.
+Deletes the last character on the prompt but obviously
+not the PromptSymbol.
+(Do not use p.length as its intended for outside use
+and counts the PromptSymbol as one of the characters.)
+*/
 func (p *Prompt) trimByte() {
-	if l := p.length(); l > 0 {
-		p.input = (p.input)[:l-1]
+	if l := len(p.input); l > 0 {
+		p.input = p.input[:l-1]
 	}
 }
 
+/*
+Return the user's input character count
+(Do not use p.length as its intended for outside use
+and counts the PromptSymbol as one of the characters.)
+*/
 func (p *Prompt) IsEmpty() bool {
-	return p.length() == 0
+	return len(p.input) == 0
 }
 
+//TODO: put prompt, menu, and screen in different packages to make methods like this private
+/*
+Return the prompt's length always with the PromptSymbol included.
+Outsiders should not have to handle/workaround the fact that
+when written the prompt includes the PromptSymbol which increases
+its length visually for the terminal by one character although internally
+the PromptSymbol is not saved as part of the user's input.
+*/
 func (p *Prompt) length() int {
-	return len(p.input)
+	return len(p.input) + 1
 }
 
 func (p *Prompt) Stringified() string {

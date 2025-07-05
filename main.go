@@ -16,7 +16,11 @@ var (
 	ErrUserInterrupted = errors.New("User pressed CTRL-C")
 	ErrEmptyListAsArg = errors.New("Empty list passed as argument")
 	ErrEmptyListAsResult = errors.New("Input not found in DB")
+	ErrKeyEsc = errors.New("User pressed ESC key")
+	ErrKeyDown = errors.New("User pressed J key")
+	ErrKeyUp = errors.New("User pressed K key")
 )
+
 
 
 func main() {
@@ -43,7 +47,7 @@ func main() {
 		b, err := reader.ReadByte();
 		if err != nil {
 			fmt.Printf("ERROR: %v", err)
-			continue
+			return
 		}
 
 		if err := screen.ReadPrompt(b); errors.Is(err, ErrUserInterrupted) {
